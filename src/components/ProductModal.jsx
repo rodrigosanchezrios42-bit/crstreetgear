@@ -7,6 +7,8 @@ export default function ProductModal({
 }) {
 
   const [imagenSeleccionada, setImagenSeleccionada] = useState(0);
+  const [inicioDeslizamiento, setInicioDeslizamiento] = useState(null);
+  const [direccion, setDireccion] = useState("next");
 
   if (!producto) {
     return null;
@@ -21,16 +23,48 @@ export default function ProductModal({
     adelanto.toLocaleString("es-CR");
 
   const siguienteImagen = () => {
+    setDireccion("next");
+
     setImagenSeleccionada(
       (imagenSeleccionada + 1) % producto.imagenes.length
     );
   };
 
   const imagenAnterior = () => {
+    setDireccion("prev");
+
     setImagenSeleccionada(
       (imagenSeleccionada - 1 + producto.imagenes.length) %
       producto.imagenes.length
     );
+  };
+
+  const comenzarDeslizamiento = (e) => {
+    setInicioDeslizamiento(e.touches[0].clientX);
+  };
+
+  const terminarDeslizamiento = (e) => {
+
+    if (inicioDeslizamiento === null) {
+      return;
+    }
+
+    const finalX = e.changedTouches[0].clientX;
+    const diferencia = inicioDeslizamiento - finalX;
+
+    const distanciaMinima = 50;
+
+    if (Math.abs(diferencia) >= distanciaMinima) {
+
+      if (diferencia > 0) {
+        siguienteImagen();
+      } else {
+        imagenAnterior();
+      }
+
+    }
+
+    setInicioDeslizamiento(null);
   };
 
   return (
@@ -48,11 +82,18 @@ export default function ProductModal({
           ×
         </button>
 
-        <div className="modal-image">
+        <div
+          className="modal-image"
+          onTouchStart={comenzarDeslizamiento}
+          onTouchEnd={terminarDeslizamiento}
+        >
 
           <img
+            key={`${imagenSeleccionada}-${direccion}`}
+            className={`gallery-image gallery-${direccion}`}
             src={producto.imagenes[imagenSeleccionada]}
             alt={`${producto.marca} ${producto.nombre}`}
+            draggable="false"
           />
 
           <button
@@ -127,3 +168,4 @@ export default function ProductModal({
     </div>
   );
 }
+

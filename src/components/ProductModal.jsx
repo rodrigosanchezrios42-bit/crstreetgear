@@ -101,13 +101,16 @@ export default function ProductModal({ producto, onClose }) {
           onTouchEnd={terminarDeslizamiento}
         >
           {cantidadImagenes > 0 ? (
-            <img
-              className={`gallery-image gallery-${direccion}`}
-              src={imagenes[imagenSeleccionada]}
-              alt={`${producto.marca} ${producto.nombre}`}
-              decoding="async"
-              draggable="false"
-            />
+            
+<img
+  key={`${producto.id}-${imagenSeleccionada}`}
+  className={`gallery-image gallery-${direccion}`}
+  src={imagenes[imagenSeleccionada]}
+  alt={`${producto.marca} ${producto.nombre}`}
+  decoding="async"
+  draggable="false"
+/>
+
           ) : (
             <p>No hay imágenes disponibles para esta pieza.</p>
           )}

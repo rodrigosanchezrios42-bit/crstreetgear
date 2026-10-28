@@ -1,3 +1,4 @@
+
 export default function Hero() {
   return (
     <section id="inicio" className="hero">
@@ -5,7 +6,7 @@ export default function Hero() {
         STREETWEAR · CULTURA · EXCLUSIVIDAD
       </p>
 
-      <h1>CRStreetGear</h1>
+      <h1>CRSG©</h1>
 
       <p className="hero-description">
         Piezas seleccionadas de streetwear disponibles

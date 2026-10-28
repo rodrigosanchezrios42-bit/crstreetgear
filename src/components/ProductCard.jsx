@@ -17,6 +17,7 @@ export default function ProductCard({
       <div className="product-image">
         {imagenPrincipal && (
           <img
+            className="product-image-photo"
             src={imagenPrincipal}
             alt={`${producto.marca} ${producto.nombre}`}
             loading={prioritaria ? "eager" : "lazy"}

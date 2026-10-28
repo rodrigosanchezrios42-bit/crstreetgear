@@ -114,19 +114,18 @@ export default function Catalog() {
   </p>
 )}
 
-      <div className="products-grid">
+      
+<div className="products-grid">
+  {productosFiltrados.map((producto, index) => (
+    <ProductCard
+      key={producto.id}
+      producto={producto}
+      onVerProducto={setProductoSeleccionado}
+      prioritaria={index < 2}
+    />
+  ))}
+</div>
 
-        {productosFiltrados.map((producto) => (
-
-          <ProductCard
-  key={producto.id}
-  producto={producto}
-  onVerProducto={setProductoSeleccionado}
-/>
-
-        ))}
-
-      </div>
 <ProductModal
   producto={productoSeleccionado}
   onClose={() => setProductoSeleccionado(null)}

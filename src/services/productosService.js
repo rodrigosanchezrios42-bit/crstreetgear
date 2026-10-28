@@ -1,143 +1,102 @@
+
 import { supabase } from "../lib/supabase";
 
-function obtenerRutaStorage(url) {
-  const marcador = "/storage/v1/object/public/productos/";
+// Optimiza imágenes antes de subirlas a Supabase.
+async function optimizarImagen(archivo) {
+  const tiposCompatibles = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+  ];
 
-  if (!url.includes(marcador)) {
-    return null;
+  // Los archivos no compatibles se conservan sin modificaciones.
+  if (!tiposCompatibles.includes(archivo.type)) {
+    return archivo;
   }
 
-  return url.split(marcador)[1];
-}
+  if (typeof createImageBitmap !== "function") {
+    return archivo;
+  }
 
-export async function eliminarImagenesStorage(urls) {
-  const rutas = urls
-    .map((url) => {
-      try {
-        const urlObj = new URL(url);
+  let imagen;
 
-        const marcador =
-          "/storage/v1/object/public/productos/";
+  try {
+    imagen = await createImageBitmap(archivo);
 
-        const posicion =
-          urlObj.pathname.indexOf(marcador);
+    // Limitar la dimensión máxima a 1600 píxeles.
+    const dimensionMaxima = 1600;
 
-        if (posicion === -1) {
-          return null;
-        }
+    const escala = Math.min(
+      1,
+      dimensionMaxima / Math.max(imagen.width, imagen.height)
+    );
 
-        return decodeURIComponent(
-          urlObj.pathname.substring(
-            posicion + marcador.length
-          )
-        );
+    const ancho = Math.round(imagen.width * escala);
+    const alto = Math.round(imagen.height * escala);
 
-      } catch (error) {
-        console.error(
-          "No se pudo obtener la ruta de la imagen:",
-          url,
-          error
-        );
+    const canvas = document.createElement("canvas");
+    canvas.width = ancho;
+    canvas.height = alto;
 
-        return null;
+    const contexto = canvas.getContext("2d");
+
+    if (!contexto) {
+      return archivo;
+    }
+
+    contexto.drawImage(imagen, 0, 0, ancho, alto);
+
+    // Convertir a WebP con buena calidad visual.
+    const blob = await new Promise((resolve) => {
+      canvas.toBlob(resolve, "image/webp", 0.82);
+    });
+
+    // Si no se pudo convertir o el archivo aumenta de tamaño,
+    // conservar el original.
+    if (!blob || blob.size >= archivo.size) {
+      return archivo;
+    }
+
+    const nombreSinExtension = archivo.name.replace(/\.[^.]+$/, "");
+
+    return new File(
+      [blob],
+      `${nombreSinExtension}.webp`,
+      {
+        type: "image/webp",
+        lastModified: Date.now(),
       }
-    })
-    .filter(Boolean);
-
-  if (rutas.length === 0) {
-    return;
-  }
-
-  console.log(
-  "URLs originales:",
-  urls
-);
-
-console.log(
-  "RUTAS ENVIADAS A STORAGE:",
-  rutas
-);
-
-console.log(
-  "PRIMERA RUTA EXACTA:",
-  JSON.stringify(rutas[0])
-);
-
-const { data: archivoExiste, error: errorExiste } =
-  await supabase.storage
-    .from("productos")
-    .download(rutas[0]);
-
-console.log(
-  "DOWNLOAD DEL ARCHIVO:",
-  archivoExiste
-);
-
-console.log(
-  "ERROR DOWNLOAD:",
-  errorExiste
-);
-
-const { data: archivos, error: errorListar } =
-  await supabase.storage
-    .from("productos")
-    .list("HS-0106");
-
-console.log("ARCHIVOS EN HS-0106:", archivos);
-console.log("ERROR AL LISTAR HS-0106:", errorListar);
-
-  const ruta = rutas[0];
-
-console.log("INTENTANDO ELIMINAR:", ruta);
-
-const { data, error } = await supabase.storage
-  .from("productos")
-  .remove([ruta]);
-
-console.log("RESULTADO REMOVE:", data);
-console.log("ERROR REMOVE:", error);
-
-const { data: despues, error: errorDespues } =
-  await supabase.storage
-    .from("productos")
-    .download(ruta);
-
-console.log(
-  "ARCHIVO DESPUÉS DE REMOVE:",
-  despues
-);
-
-console.log(
-  "ERROR DESPUÉS DE REMOVE:",
-  errorDespues
-);
-
-  if (error) {
-    console.error(
-      "Error eliminando imágenes de Storage:",
+    );
+  } catch (error) {
+    console.warn(
+      "No se pudo optimizar la imagen. Se utilizará el archivo original.",
       error
     );
 
-    throw error;
+    return archivo;
+  } finally {
+    imagen?.close();
   }
-
-  console.log(
-  "RESPUESTA DE STORAGE AL ELIMINAR:",
-  data
-);
-
-  return data;
 }
 
+// Sube una imagen optimizada y devuelve su URL pública.
 export async function subirImagen(archivo, sku, indice) {
-  const extension = archivo.name.split(".").pop();
+  const archivoOptimizado = await optimizarImagen(archivo);
+
+  const extension =
+    archivoOptimizado.type === "image/webp"
+      ? "webp"
+      : archivoOptimizado.name.split(".").pop();
 
   const nombreArchivo =
     `${sku}/${Date.now()}-${indice}.${extension}`;
 
   const { error } = await supabase.storage
     .from("productos")
-    .upload(nombreArchivo, archivo);
+    .upload(nombreArchivo, archivoOptimizado, {
+      contentType: archivoOptimizado.type || undefined,
+      cacheControl: "31536000",
+    });
 
   if (error) {
     throw error;
@@ -150,7 +109,58 @@ export async function subirImagen(archivo, sku, indice) {
   return data.publicUrl;
 }
 
+// Obtiene la ruta de una imagen dentro del bucket productos.
+function obtenerRutaStorage(url) {
+  try {
+    const urlObj = new URL(url);
+    const marcador = "/storage/v1/object/public/productos/";
+    const posicion = urlObj.pathname.indexOf(marcador);
 
+    if (posicion === -1) {
+      return null;
+    }
+
+    return decodeURIComponent(
+      urlObj.pathname.substring(posicion + marcador.length)
+    );
+  } catch (error) {
+    console.error("No se pudo obtener la ruta de la imagen:", error);
+    return null;
+  }
+}
+
+// Elimina una o varias imágenes del almacenamiento de Supabase.
+export async function eliminarImagenesStorage(urls) {
+  if (!Array.isArray(urls) || urls.length === 0) {
+    return;
+  }
+
+  const rutas = [
+    ...new Set(
+      urls
+        .filter((url) => typeof url === "string")
+        .map(obtenerRutaStorage)
+        .filter(Boolean)
+    ),
+  ];
+
+  if (rutas.length === 0) {
+    return;
+  }
+
+  const { data, error } = await supabase.storage
+    .from("productos")
+    .remove(rutas);
+
+  if (error) {
+    console.error("Error eliminando imágenes de Storage:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+// Registra un producto nuevo.
 export async function agregarProducto(producto) {
   const { data, error } = await supabase
     .from("productos")
@@ -164,6 +174,8 @@ export async function agregarProducto(producto) {
 
   return data;
 }
+
+// Actualiza un producto existente.
 export async function actualizarProducto(id, producto) {
   const { data, error } = await supabase
     .from("productos")

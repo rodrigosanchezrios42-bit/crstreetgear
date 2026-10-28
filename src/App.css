@@ -1769,3 +1769,427 @@ section {
     word-break: normal;
   }
 }
+
+/* Pantalla minimalista de encargos cerrados */
+
+.pantalla-espera {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  padding: 32px 7%;
+  background: #0a0a0a;
+  color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+.espera-header,
+.espera-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.espera-logo {
+  color: #f5f5f5;
+  text-decoration: none;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.espera-logo span {
+  color: #888;
+}
+
+.espera-estado,
+.espera-subtitulo {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #929292;
+}
+
+.espera-estado {
+  border: 1px solid #333;
+  padding: 10px 13px;
+}
+
+.espera-contenido {
+  width: 100%;
+  max-width: 620px;
+  margin: auto 0;
+  padding: 90px 0;
+}
+
+.espera-subtitulo {
+  margin-bottom: 28px;
+}
+
+.espera-contenido h1 {
+  font-size: clamp(54px, 9vw, 100px);
+  line-height: 0.98;
+  letter-spacing: -5px;
+  margin: 0 0 28px;
+  font-weight: 700;
+}
+
+.espera-contenido h1 span {
+  color: #777;
+}
+
+.espera-mensaje {
+  max-width: 440px;
+  color: #aaa;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.espera-gracias {
+  margin-top: 24px;
+  color: #777;
+  font-size: 13px;
+}
+
+.espera-contacto {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 15px 19px;
+  border: 1px solid #414141;
+  color: #f5f5f5;
+  text-decoration: none;
+  font-size: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.espera-contacto:hover {
+  background: #f5f5f5;
+  color: #0a0a0a;
+}
+
+.espera-footer {
+  border-top: 1px solid #292929;
+  padding-top: 22px;
+  color: #777;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.tienda-cargando {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #0a0a0a;
+  color: #f5f5f5;
+  font-size: 13px;
+  letter-spacing: 3px;
+}
+
+@media (max-width: 600px) {
+  .pantalla-espera {
+    padding: 25px 6%;
+  }
+
+  .espera-header {
+    align-items: flex-start;
+  }
+
+  .espera-logo {
+    font-size: 18px;
+  }
+
+  .espera-estado {
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 9px 8px;
+  }
+
+  .espera-contenido {
+    padding: 70px 0;
+  }
+
+  .espera-contenido h1 {
+    font-size: clamp(48px, 13vw, 70px);
+    letter-spacing: -3px;
+  }
+
+  .espera-mensaje {
+    font-size: 14px;
+  }
+
+  .espera-footer {
+    font-size: 9px;
+  }
+}
+
+
+/* Control global de disponibilidad en administración */
+
+.admin-encargos {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  margin: 30px 0;
+  border: 1px solid #333;
+  background: #0c0c0c;
+  color: #f5f5f5;
+}
+
+.admin-encargos-info {
+  flex: 1;
+}
+
+.admin-encargos-info h2 {
+  margin: 8px 0;
+  font-size: 20px;
+}
+
+.admin-encargos-info > p:last-child {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.admin-encargos-toggle {
+  width: 54px;
+  height: 30px;
+  padding: 3px;
+  flex-shrink: 0;
+  border: 1px solid #555;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-encargos-toggle.abierto {
+  background: #e8e8e8;
+}
+
+.admin-encargos-toggle.cerrado {
+  background: #292929;
+}
+
+.admin-encargos-toggle-circle {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #111;
+  transition: transform 0.2s;
+}
+
+.admin-encargos-toggle.cerrado .admin-encargos-toggle-circle {
+  background: #eee;
+  transform: translateX(24px);
+}
+
+.admin-encargos-estado {
+  min-width: 70px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #aaa;
+}
+
+.admin-encargos-toggle:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+@media (max-width: 600px) {
+  .admin-encargos {
+    padding: 18px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .admin-encargos-info {
+    flex-basis: calc(100% - 70px);
+  }
+}
+
+
+/* =========================================
+   CRSTREETGEAR - PANTALLA DE ESPERA RESPONSIVA
+   ========================================= */
+
+.pantalla-espera {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: max(24px, env(safe-area-inset-top))
+           max(20px, env(safe-area-inset-right))
+           max(24px, env(safe-area-inset-bottom))
+           max(20px, env(safe-area-inset-left));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  overflow-wrap: anywhere;
+  overflow-x: clip;
+}
+
+.pantalla-espera *,
+.pantalla-espera *::before,
+.pantalla-espera *::after {
+  box-sizing: border-box;
+}
+
+.espera-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.espera-logo {
+  max-width: 100%;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  letter-spacing: clamp(2px, 0.6vw, 5px);
+  overflow-wrap: anywhere;
+}
+
+.espera-estado {
+  max-width: 100%;
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+  letter-spacing: clamp(1.5px, 0.4vw, 3px);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.espera-contenido {
+  width: 100%;
+  max-width: 760px;
+  margin: auto;
+  padding: clamp(40px, 8vh, 100px) 0;
+  text-align: center;
+}
+
+.espera-contenido h1 {
+  max-width: 100%;
+  font-size: clamp(2.3rem, 7vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: clamp(-3px, -0.3vw, -1px);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.espera-contenido p {
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.pantalla-espera a {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pantalla-espera a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+  .pantalla-espera {
+    padding-top: max(22px, env(safe-area-inset-top));
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+  }
+
+  .espera-contenido {
+    max-width: 440px;
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .espera-contenido h1 {
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+    line-height: 1.08;
+  }
+
+  .espera-contenido p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .pantalla-espera a {
+    min-height: 44px;
+  }
+}
+
+/* Celulares muy pequeños */
+@media (max-width: 360px) {
+  .pantalla-espera {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .espera-contenido {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .espera-contenido h1 {
+    font-size: clamp(1.9rem, 9.5vw, 2.3rem);
+  }
+
+  .espera-logo {
+    letter-spacing: 2px;
+  }
+}
+
+/* Tablets y pantallas medianas */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .pantalla-espera {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .espera-contenido {
+    max-width: 680px;
+  }
+}
+
+/* Celular en horizontal y pantallas de poca altura */
+@media (max-height: 500px) and (orientation: landscape) {
+  .pantalla-espera {
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
+  .espera-contenido {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .espera-contenido h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+  }
+}
+
+/* Accesibilidad: reduce animaciones si el usuario lo solicita */
+@media (prefers-reduced-motion: reduce) {
+  .pantalla-espera *,
+  .pantalla-espera *::before,
+  .pantalla-espera *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -2193,3 +2193,76 @@ section {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Ajustes finales para la pantalla de encargos cerrados */
+.pantalla-espera {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.espera-header {
+  width: 100%;
+  text-align: center;
+}
+
+.espera-logo,
+.espera-estado {
+  max-width: 100%;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.espera-contenido {
+  width: 100%;
+  max-width: 680px;
+  margin: auto;
+  text-align: center;
+}
+
+.espera-contenido h1 {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.espera-contenido p {
+  width: 100%;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .pantalla-espera {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .espera-header {
+    justify-content: center;
+  }
+
+  .espera-contenido {
+    padding: 44px 0;
+  }
+
+  .espera-contenido h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+
+  .espera-contenido p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+}

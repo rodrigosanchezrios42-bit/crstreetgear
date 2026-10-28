@@ -52,7 +52,7 @@ function PantallaEspera() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Consultar por WhatsApp ↗
+          Consultar por WhatsApp 
         </a>
       </section>
 

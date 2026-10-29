@@ -6,7 +6,11 @@ export default function Hero() {
         STREETWEAR · CULTURA · EXCLUSIVIDAD
       </p>
 
-      <h1>CRSG©</h1>
+      
+<h1>
+  CRSG<span className="hero-copyright">©</span>
+</h1>
+
 
       <p className="hero-description">
         Piezas seleccionadas de streetwear disponibles

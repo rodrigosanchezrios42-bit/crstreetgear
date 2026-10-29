@@ -2368,3 +2368,13 @@ section {
     will-change: auto;
   }
 }
+
+/* Símbolo © con más presencia en el título principal */
+.hero .hero-copyright {
+  display: inline-block;
+  font-size: 0.72em;
+  font-weight: inherit;
+  vertical-align: baseline;
+  line-height: 1;
+  margin-left: 0.04em;
+}
